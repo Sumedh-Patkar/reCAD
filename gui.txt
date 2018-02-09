@@ -1,0 +1,118 @@
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+import java.awt.image.BufferedImage;
+
+public class gui
+{
+	public static void main( String[] args)
+	{
+		JFrame frame = new JFrame("GUI");
+		frame.add( new GuiComponent("The Draw line buttton has been pressed"));
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);    //to close when exit button is pressed
+		frame.setSize(2000,1100);								 //set screen with given size
+		frame.setVisible(true);  								 //to show the screen
+	}
+}
+
+class GuiComponent extends JComponent
+	implements MouseMotionListener, ActionListener
+{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3088121316923015183L;
+	String msg,msg1,msg2;
+	int msgx = 100, msgy = 200;
+	JButton button1,button2,button3,button4,button5;
+	
+	private BufferedImage canvas;
+	public GuiComponent( String message )
+	{
+		msg = message;
+		msg1 = "The Draw Polygon button has been pressed";
+		msg2 = "The Draw Circle button has been pressed";
+		button1 = new JButton("Draw Line");
+		button2 = new JButton("Draw Polygon");
+		button3 = new JButton("Draw Circle");
+		setLayout(new FlowLayout());
+		add(button1);
+		add(button2);
+		add(button3);
+		button1.addActionListener(this);
+		button2.addActionListener(this);
+		button3.addActionListener(this);
+		addMouseMotionListener(this);
+		canvas = new BufferedImage(1700,1000, BufferedImage.TYPE_INT_ARGB);
+		fillCanvas(Color.BLACK);
+	}
+	
+    public void paintComponent(Graphics g)
+    {
+        super.paintComponent(g);
+        Graphics2D g2 = (Graphics2D) g;
+        g2.drawImage(canvas, null, null);
+    }
+	
+	public void fillCanvas(Color c)
+	{
+		int color = c.getRGB();
+		for(int x=0;x<1700;x++)
+		{
+			for(int y=0;y<1000;y++)
+			{
+				canvas.setRGB(x, y, color);
+			}
+		}
+		repaint();
+	}
+	public void actionPerformed( ActionEvent e )
+	{
+		if(e.getSource() == button1)
+		{
+			JOptionPane.showMessageDialog(null, msg);
+			drawLine(Color.YELLOW,300,300,500,500);
+		}
+		else if(e.getSource() == button2)
+		{
+			JOptionPane.showMessageDialog(null, msg1);
+			drawRect(Color.YELLOW,300,300,200,200);
+		}
+		else if(e.getSource() == button3)
+		{
+			JOptionPane.showMessageDialog(null, msg2);
+		}
+	}
+	
+	private void drawRect(Color c, int x1, int y1, int width, int height) 
+	{
+        int color = c.getRGB();
+	    for (int x = x1; x < x1 + width; x++) 
+	    {
+	    	for (int y = y1; y < y1 + height; y++) 
+	    	{
+	    		if(x == x1 || x == x1 + width - 1)
+	    			canvas.setRGB(x, y, color);
+	    		if(y == y1 || y == y1 + height - 1)
+	    			canvas.setRGB(x, y, color);
+	        }
+	    }
+	    repaint();
+	}
+	
+	private void drawLine(Color c,int i, int j, int k, int l)
+	{
+		int m;
+		int color=c.getRGB();
+		for(m=i;m<k;m++)
+		{
+			canvas.setRGB(m,m,color);
+	
+		}
+		repaint();
+	}
+
+	public void mouseDragged( MouseEvent e) {}
+	
+	public void mouseMoved( MouseEvent e) {}
+}
